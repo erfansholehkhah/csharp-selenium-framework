@@ -30,7 +30,14 @@
         public static class Browser
         {
             public const bool Incognito = false;
-            public const bool HeadLess = false;
+
+            // CI runners have no display, so default to headless
+            // there via the HEADLESS env var; local runs stay headed.
+            public static readonly bool HeadLess =
+                bool.TryParse(
+                    Environment.GetEnvironmentVariable("HEADLESS"),
+                    out var headless) && headless;
+
             public const int WindowWidth = 1920;
             public const int WindowHeight = 1080;
             public const BrowserType DefaultBrowser = BrowserType.Chrome;
